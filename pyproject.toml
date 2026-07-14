@@ -47,6 +47,7 @@ dev = ["pytest>=7.0", "statsmodels>=0.13", "scikit-learn>=1.0"]
 Homepage = "https://github.com/merwanroudane/deeppanel"
 Repository = "https://github.com/merwanroudane/deeppanel"
 Issues = "https://github.com/merwanroudane/deeppanel/issues"
+"PyPI" = "https://pypi.org/project/deeppanel/"
 
 [tool.setuptools.packages.find]
 include = ["deeppanel*"]

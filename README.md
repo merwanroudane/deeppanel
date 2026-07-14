@@ -1,6 +1,12 @@
 # deeppanel
 
+[![PyPI version](https://img.shields.io/pypi/v/deeppanel.svg)](https://pypi.org/project/deeppanel/)
+[![Python versions](https://img.shields.io/pypi/pyversions/deeppanel.svg)](https://pypi.org/project/deeppanel/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **Deep neural network estimation, forecasting and inference in panel data models.**
+
+📦 **PyPI:** https://pypi.org/project/deeppanel/ — `pip install deeppanel`
 
 `deeppanel` is a faithful Python implementation of three recent papers on deep
 learning for panel data:
