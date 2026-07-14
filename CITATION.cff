@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "deeppanel: Deep neural network estimation, forecasting and inference in panel data models"
-version: 0.1.0
+version: 0.1.1
 date-released: 2026-07-14
 authors:
   - family-names: Roudane

@@ -39,42 +39,93 @@ Optional extras (`statsmodels`, `scikit-learn`) install with `pip install deeppa
 
 ## Quickstart
 
-### 1. Deep pooled panel forecasting (Chronopoulos et al.)
+> **📖 Full syntax cookbook:** [`docs/USAGE.md`](docs/USAGE.md) — copy-paste-ready
+> scripts for every workflow (data prep, every option, benchmarks, tables, plots,
+> LDPM). The blocks below are the short version.
+
+### Step 0 — build a balanced panel
+
+Every estimator takes a `PanelData`: `y` is `(N, T)`, `X` is `(N, T, p)`
+(`N` units, `T` periods, `p` regressors).
 
 ```python
 import numpy as np
-from deeppanel import DeepPooledPanel, PanelData, TrainConfig
+from deeppanel import PanelData
 
-# y: (N, T) outcome; X: (N, T, p) regressors -- a balanced panel
-panel = PanelData(y, X)                      # or PanelData.from_long(df, "id","t","y",["x1","x2"])
+# (a) from NumPy arrays
+panel = PanelData(
+    y,                       # shape (N, T)
+    X,                       # shape (N, T, p)
+    units=["CA","FR","DE","IT","JP","UK","US"],   # optional labels
+    feature_names=["unemp","core_cpi","energy"],  # optional
+)
+
+# (b) from a long/tidy pandas DataFrame (one row per unit-period)
+panel = PanelData.from_long(df, unit="country", time="year",
+                            y="inflation", x=["unemp", "core", "energy"])
+print(panel)             # PanelData(N=7, T=80, p=3)
+```
+
+### 1. Deep pooled panel forecasting (Chronopoulos et al.)
+
+```python
+from deeppanel import DeepPooledPanel, TrainConfig
 
 model = DeepPooledPanel(
-    horizon=1,                 # direct h-step forecasting: y_it ~ x_{i,t-h}
+    horizon=4,                 # direct h-step forecasting: y_it ~ x_{i,t-h}
     depth=3, width=20,         # L hidden ReLU layers of width M (or pass cv=PAPER_GRID)
     idiosyncratic=False,       # add per-unit component h_i (WP Eq. 10) if True
     feature_scale="standardize",
-    config=TrainConfig(max_epochs=1000, lr=0.01, batch_size=14),
+    config=TrainConfig(max_epochs=1000, lr=0.01, batch_size=14, seed=0),
     seed=0,
-).fit(panel)
+)
+model.fit(panel)
 
-yhat_next = model.forecast(panel)            # one direct h-step forecast per unit
-grad      = model.partial_derivatives(X_rows)  # d g / d x  (Eq. 11, "opens the black box")
-test      = model.poolability_test(panel)      # is an idiosyncratic component needed?
+yhat = model.forecast(panel)                 # (N,) one direct h-step forecast per unit
+print(dict(zip(panel.units, np.round(yhat, 3))))
+
+# Interpretability & diagnostics:
+grad = model.partial_derivatives(panel.X[:, -1, :])   # (N, p) marginal effects (Eq. 11)
+test = model.poolability_test(panel)                  # need a unit-specific component?
+print(f"poolability P={test.statistic:.2f}, p={test.p_value:.3f}")
 ```
 
-### 2. LLM-powered Deep Panel Modeling (Gao et al.)
+### 2. Compare against benchmarks (recursive out-of-sample)
+
+```python
+from deeppanel import rolling_forecast, viz
+from deeppanel.benchmarks import DeepTimeSeries, PanelVAR, ARBenchmark
+
+cfg = TrainConfig(max_epochs=500, lr=0.01, batch_size=14, seed=0)
+models = {
+    "DeepPooled": lambda: DeepPooledPanel(horizon=1, depth=3, width=20, config=cfg, seed=0),
+    "DeepTS":     lambda: DeepTimeSeries(horizon=1, depth=3, width=20, config=cfg, seed=0),
+    "PVAR":       lambda: PanelVAR(max_lags=4),
+    "AR1":        lambda: ARBenchmark(1),
+}
+res = rolling_forecast(panel, models, horizon=1, start_frac=0.7)
+
+rmse   = {n: res.rmse(n) for n in models}
+ratios = {n: rmse[n] / rmse["AR1"] for n in models}
+pvals  = res.dm_table(base="AR1").set_index("model")["p_value"].to_dict()
+print(viz.forecast_table(rmse, ratios=ratios, pvalues=pvals, base="AR1"))  # journal table
+```
+
+### 3. LLM-powered Deep Panel Modeling (Gao et al.)
 
 ```python
 from deeppanel import LDPM, surrogate_residuals
 
 # The LLM/BERT text pipeline is external; feed its aggregated outputs here.
-eps_S = surrogate_residuals(y_surrogate, x_surrogate, n_lags=1)   # Eq. 3.2 residuals
+# y:(N,T)  X:(N,T,dx) embeddings  Z:(N,T,dz) macro  y_surr:(N,T)  x_surr:(N,T,ds)
+eps_S = surrogate_residuals(y_surr, x_surr, n_lags=1)            # Eq. 3.2 residuals
 
 ldpm = LDPM(n_groups=3, lam=0.05, alpha=0.10, seed=0)
-ldpm.fit(y, X, Z=macro, surrogate_resid=eps_S, calibrate=True)
+ldpm.fit(y[:, :-1], X[:, :-1], Z=Z[:, :-1], surrogate_resid=eps_S[:, :-1], calibrate=True)
 
-groups              = ldpm.groups                       # recovered latent groups (C-LASSO)
-yhat, lower, upper  = ldpm.forecast_interval(X_last, Z_last, eps_S_last)  # split conformal
+groups             = ldpm.groups                                 # latent groups (C-LASSO)
+yhat, lower, upper = ldpm.forecast_interval(X[:, -1, :], Z_last=Z[:, -1, :],
+                                            surrogate_resid_last=eps_S[:, -1])  # conformal
 ```
 
 ---
@@ -113,6 +164,9 @@ colour maps (`parula_colors`, …) with Parula as the default.
 ---
 
 ## Syntax reference
+
+> Every argument of every function, with runnable examples, is in the
+> **[usage cookbook → `docs/USAGE.md`](docs/USAGE.md)**. Quick method summary below.
 
 ### `DeepPooledPanel(horizon=1, depth=3, width=20, idiosyncratic=False, demean=True, feature_scale="standardize", target_scale="none", cv=None, val_frac=0.2, config=None, first_layer_bias=False, batchnorm=False, dropout=0.0, seed=None)`
 

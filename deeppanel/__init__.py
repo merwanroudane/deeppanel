@@ -38,7 +38,7 @@ from . import benchmarks
 from . import datasets
 from . import viz
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __author__ = "Merwan Roudane"
 
 __all__ = [
