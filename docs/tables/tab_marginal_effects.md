@@ -1,0 +1,13 @@
+|                   |   d invest / d value |   d invest / d capital |   d invest / d invest_L1 |
+|:------------------|---------------------:|-----------------------:|-------------------------:|
+| General Motors    |               -0.071 |                  0.227 |                    0.699 |
+| US Steel          |               -0.089 |                 -0.58  |                    0.985 |
+| General Electric  |               -0.006 |                  0.048 |                    0.424 |
+| Chrysler          |               -0.101 |                  0.151 |                    0.571 |
+| Atlantic Refining |               -0.003 |                  0.026 |                    0.18  |
+| IBM               |               -0.155 |                 -0.001 |                    0.846 |
+| Union Oil         |                0.024 |                  0.06  |                    0.122 |
+| Westinghouse      |               -0.009 |                  0.294 |                   -0.101 |
+| Goodyear          |                0.004 |                 -0.078 |                    0.179 |
+| Diamond Match     |               -0.043 |                  0.527 |                   -0.326 |
+| American Steel    |                0.038 |                 -0.097 |                    0.267 |

@@ -8,6 +8,9 @@
 
 📦 **PyPI** — **v0.1.2** · https://pypi.org/project/deeppanel/ · `pip install deeppanel`
 
+🌞 **Documentation site & real-data guide:** https://merwanroudane.github.io/deeppanel/
+· 📓 [Real-data notebook](https://github.com/merwanroudane/deeppanel/blob/main/docs/deeppanel_tutorial.ipynb)
+
 `deeppanel` is a faithful Python implementation of three recent papers on deep
 learning for panel data:
 

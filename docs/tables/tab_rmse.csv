@@ -1,0 +1,5 @@
+,RMSE,ratio to AR1
+DeepPooled,85.851,1.329
+DeepTS,103.433,1.602
+PVAR,336.391,5.209
+AR1,64.583,1.0

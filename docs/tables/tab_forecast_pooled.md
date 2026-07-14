@@ -1,0 +1,13 @@
+|                   |   1-year-ahead forecast |
+|:------------------|------------------------:|
+| General Motors    |                  1803.6 |
+| US Steel          |                   341.4 |
+| General Electric  |                   230.5 |
+| Chrysler          |                   166.8 |
+| Atlantic Refining |                    89.7 |
+| IBM               |                   -74   |
+| Union Oil         |                    56   |
+| Westinghouse      |                    45.6 |
+| Goodyear          |                    44.9 |
+| Diamond Match     |                    -5.1 |
+| American Steel    |                    -6   |

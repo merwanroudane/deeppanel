@@ -1,0 +1,4 @@
+model,vs,DM,p_value,mean_dloss
+DeepPooled,AR1,2.985,0.998,3199.483
+DeepTS,AR1,1.711,0.955,6527.472
+PVAR,AR1,3.276,0.999,108987.861

@@ -30,3 +30,6 @@ examples/_output/
 Thumbs.db
 .idea/
 .vscode/
+
+# local preview helper
+.claude/

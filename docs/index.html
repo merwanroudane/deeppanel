@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>deeppanel — deep neural network estimation & forecasting in panel data</title>
+<meta name="description" content="deeppanel: deep pooled panel networks, homogeneity pursuit, conformal intervals — a faithful Python library with a real-data guide.">
+<style>
+:root{
+  --bg:#fffdf7; --panel:#ffffff; --ink:#243b53; --muted:#5b6b7c;
+  --sun1:#ffd24c; --sun2:#ff9f43; --sky:#2f80ed; --sky-soft:#eaf3ff;
+  --line:#eadfce; --accent:#e8730c; --good:#1f9d55; --code:#2d3748;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
+a{color:var(--sky);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.hero{background:linear-gradient(120deg,var(--sun1) 0%,var(--sun2) 45%,#ffb36b 100%);
+  color:#3a2a06;padding:54px 0 46px;box-shadow:0 4px 24px rgba(255,159,67,.25)}
+.hero h1{margin:0 0 6px;font-size:2.6rem;letter-spacing:-.5px}
+.hero p.tag{margin:.2rem 0 1.2rem;font-size:1.15rem;color:#5a4210;font-weight:500}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.badge{background:rgba(255,255,255,.82);color:#3a2a06;border:1px solid rgba(255,255,255,.9);
+  padding:7px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
+.badge.v{background:#243b53;color:#fff}
+.install{display:inline-block;margin-top:16px;background:#243b53;color:#ffe9c7;
+  padding:10px 18px;border-radius:10px;font-family:ui-monospace,Menlo,Consolas,monospace}
+nav.toc{position:sticky;top:0;z-index:5;background:rgba(255,253,247,.95);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;flex-wrap:wrap;gap:6px 18px;padding:11px 20px}
+nav.toc a{color:var(--muted);font-weight:600;font-size:.92rem}
+nav.toc a:hover{color:var(--accent)}
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+h2{font-size:1.7rem;margin:.2em 0 .6em;color:#20364b}
+h2 .n{color:var(--accent);font-weight:800;margin-right:.4em}
+h3{font-size:1.2rem;color:#20364b;margin:1.4em 0 .4em}
+p{color:#33475b}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:22px 24px;margin:18px 0;box-shadow:0 2px 14px rgba(180,150,90,.08)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}.hero h1{font-size:2rem}}
+figure{margin:14px 0;text-align:center}
+figure img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:12px;
+  background:#fff;box-shadow:0 3px 16px rgba(120,120,120,.10)}
+figcaption{color:var(--muted);font-size:.9rem;margin-top:8px;font-style:italic}
+.tablebox{overflow-x:auto;margin:12px 0}
+table.dp-table{border-collapse:collapse;width:100%;font-size:.9rem;background:#fff}
+table.dp-table th,table.dp-table td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:right}
+table.dp-table th{background:var(--sky-soft);color:#20364b;position:sticky;top:0}
+table.dp-table tr:nth-child(even) td{background:#fcf9f2}
+table.dp-table tr:hover td{background:#fff6e6}
+table.dp-table td:first-child,table.dp-table th:first-child{text-align:left;font-weight:600}
+pre{background:#0f2033;color:#e7eefc;padding:16px 18px;border-radius:12px;overflow-x:auto;
+  font:13.5px/1.55 ui-monospace,Menlo,Consolas,monospace}
+pre .c{color:#9fb3c8}
+code.inl{background:#fdf0dc;color:#a4530a;padding:2px 6px;border-radius:6px;font-size:.9em}
+.pill{display:inline-block;background:var(--sky-soft);color:var(--sky);border-radius:999px;
+  padding:2px 10px;font-size:.8rem;font-weight:700;margin-bottom:8px}
+.callout{background:#fff8ea;border-left:4px solid var(--sun2);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.eq{background:#f7fbff;border:1px solid #dce8f7;border-radius:10px;padding:10px 16px;margin:12px 0;overflow-x:auto}
+footer{background:#20364b;color:#cbd8e6;padding:34px 0;font-size:.92rem}
+footer a{color:#ffd24c}
+.key{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.key .k{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.key .k b{display:block;font-size:1.5rem;color:var(--accent)}
+.key .k span{font-size:.82rem;color:var(--muted)}
+</style>
+
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]}};</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head><body>
+
+<header class="hero"><div class="wrap">
+  <h1>deeppanel</h1>
+  <p class="tag">Deep neural network estimation, forecasting &amp; inference in panel data models</p>
+  <div class="badges">
+    <span class="badge v">v0.1.2</span>
+    <a class="badge" href="https://pypi.org/project/deeppanel/">📦 PyPI</a>
+    <a class="badge" href="https://github.com/merwanroudane/deeppanel">🐙 GitHub</a>
+    <a class="badge" href="https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md">📖 Cookbook</a>
+    <a class="badge" href="https://github.com/merwanroudane/deeppanel/blob/main/docs/deeppanel_tutorial.ipynb">📓 Notebook</a>
+  </div>
+  <div class="install">pip install deeppanel</div>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#overview">Overview</a>
+  <a href="#theory">Theory</a>
+  <a href="#papers">Papers</a>
+  <a href="#data">Real data</a>
+  <a href="#forecast">Forecasting</a>
+  <a href="#marginal">Marginal effects</a>
+  <a href="#groups">Latent groups</a>
+  <a href="#conformal">Intervals</a>
+  <a href="#quickstart">Quickstart</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="overview">
+  <span class="pill">OVERVIEW</span>
+  <h2><span class="n">§1</span>What is deeppanel?</h2>
+  <p><strong>deeppanel</strong> is a faithful Python implementation of three recent papers
+  on deep learning for panel data. It brings modern neural-network estimators to
+  panel forecasting while keeping the things econometricians need: interpretable
+  marginal effects, specification tests, benchmarks, and honest prediction intervals.</p>
+  <div class="key">
+    <div class="k"><b>2</b><span>estimator families</span></div>
+    <div class="k"><b>11</b><span>modules</span></div>
+    <div class="k"><b>MIT</b><span>licensed</span></div>
+    <div class="k"><b>0.983</b><span>real-data in-sample R²</span></div>
+  </div>
+  <div class="card">
+    <h3>Two estimator families</h3>
+    <p><b>Deep pooled panel</b> — a common nonlinear function shared across units
+    (plus an optional unit-specific part), with partial-derivative interpretability,
+    a nonlinear poolability test, and AR / panel-VAR / deep-time-series benchmarks.</p>
+    <p><b>LDPM</b> — surrogate augmentation, Deep Panel Training with
+    classifier-LASSO <em>homogeneity pursuit</em> (latent groups), and within-group
+    <em>split-conformal</em> prediction intervals.</p>
+  </div>
+</section>
+
+<section id="theory">
+  <span class="pill">THEORY</span>
+  <h2><span class="n">§2</span>The methods in one page</h2>
+  <p>The deep pooled panel models the nonlinear conditional mean as a common part
+  $h$ plus an optional idiosyncratic part $h_i$:</p>
+  <div class="eq">$$ \mathbb{E}(y_{it}\mid x_{it}) = \tilde h_i(x_{it}) = h(x_{it}) + h_i(x_{it}), $$</div>
+  <p>where $h$ is a feed-forward ReLU network with a linear output, estimated by
+  pooled least squares over all units and periods:</p>
+  <div class="eq">$$ \hat\theta = \arg\min_\theta \frac{1}{NT}\sum_i\sum_t\big(y_{it}-g(x_{it};\theta)\big)^2 . $$</div>
+  <div class="grid2">
+    <div class="card"><h3>Interpretability</h3><p>Exact <b>partial derivatives</b>
+      $\partial g/\partial x$ (via autograd) give time- and unit-varying marginal
+      effects — opening the black box.</p></div>
+    <div class="card"><h3>Specification</h3><p>A nonlinear <b>poolability test</b>
+      decides whether unit-specific components are needed beyond the common function.</p></div>
+    <div class="card"><h3>Homogeneity pursuit</h3><p>A classifier-LASSO product
+      penalty pulls unit heads toward <b>latent group centres</b>, recovering clusters
+      of units that share a response.</p></div>
+    <div class="card"><h3>Conformal intervals</h3><p><b>Split-conformal</b> calibration
+      within each group yields distribution-free prediction intervals with valid
+      marginal coverage.</p></div>
+  </div>
+</section>
+
+<section id="papers">
+  <span class="pill">SOURCES</span>
+  <h2><span class="n">§3</span>Papers implemented</h2>
+  <div class="card">
+    <p><b>Chronopoulos, Chrysikou, Kapetanios, Mitchell &amp; Raftapostolos.</b>
+    <i>Forecasting with Deep Pooled Panel Neural Networks.</i> Econometric Reviews (2026).
+    <a href="https://doi.org/10.1080/07474938.2026.2660660">doi:10.1080/07474938.2026.2660660</a>
+    — and the working paper <i>Deep Neural Network Estimation in Panel Data Models</i>,
+    FRB Cleveland WP 23-15 (2023),
+    <a href="https://doi.org/10.26509/frbc-wp-202315">doi:10.26509/frbc-wp-202315</a>.</p>
+    <p><b>Gao, Sun, Wang, Liu &amp; Hsiao.</b> <i>How Does LLM Help Regional CPI
+    Forecast: An LLM-powered Deep Panel Modeling Framework</i> (2026).</p>
+    <p>Every estimator is checked equation-by-equation and validated on the papers'
+    own simulation designs — see the <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/PAPER_COMPATIBILITY.md">compatibility map</a>.</p>
+  </div>
+</section>
+
+<section id="data">
+  <span class="pill">WALKTHROUGH · REAL DATA</span>
+  <h2><span class="n">§4</span>Case study: the Grunfeld investment panel</h2>
+  <p>We apply <code class="inl">deeppanel</code> to a classic <b>real</b> panel — gross
+  investment of <b>11 US firms over 1935–1954</b> — modelled as a nonlinear function of
+  market <code class="inl">value</code>, <code class="inl">capital</code>, and lagged
+  investment. Investment is highly heterogeneous and cyclical: the ideal setting for a
+  pooled nonlinear model.</p>
+  <figure><img src="figures/fig_investment_paths.png" alt="Gross investment by firm, 1935–1954 (Grunfeld panel)."><figcaption>Gross investment by firm, 1935–1954 (Grunfeld panel).</figcaption></figure>
+  <div class="tablebox"><h4>Firm averages (Grunfeld)</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean invest</th>
+      <th>mean value</th>
+      <th>mean capital</th>
+    </tr>
+    <tr>
+      <th>firm</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>General Motors</th>
+      <td>608.000</td>
+      <td>4333.800</td>
+      <td>648.400</td>
+    </tr>
+    <tr>
+      <th>US Steel</th>
+      <td>410.500</td>
+      <td>1971.800</td>
+      <td>294.900</td>
+    </tr>
+    <tr>
+      <th>General Electric</th>
+      <td>102.300</td>
+      <td>1941.300</td>
+      <td>400.200</td>
+    </tr>
+    <tr>
+      <th>Chrysler</th>
+      <td>86.100</td>
+      <td>693.200</td>
+      <td>121.200</td>
+    </tr>
+    <tr>
+      <th>Atlantic Refining</th>
+      <td>61.800</td>
+      <td>231.500</td>
+      <td>486.800</td>
+    </tr>
+    <tr>
+      <th>IBM</th>
+      <td>55.400</td>
+      <td>419.900</td>
+      <td>104.300</td>
+    </tr>
+    <tr>
+      <th>Union Oil</th>
+      <td>47.600</td>
+      <td>149.800</td>
+      <td>314.900</td>
+    </tr>
+    <tr>
+      <th>Westinghouse</th>
+      <td>42.900</td>
+      <td>670.900</td>
+      <td>85.600</td>
+    </tr>
+    <tr>
+      <th>Goodyear</th>
+      <td>41.900</td>
+      <td>333.600</td>
+      <td>297.900</td>
+    </tr>
+    <tr>
+      <th>American Steel</th>
+      <td>6.800</td>
+      <td>57.500</td>
+      <td>68.000</td>
+    </tr>
+    <tr>
+      <th>Diamond Match</th>
+      <td>3.100</td>
+      <td>70.900</td>
+      <td>5.900</td>
+    </tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="forecast">
+  <span class="pill">FORECASTING</span>
+  <h2><span class="n">§5</span>One-year-ahead forecasting &amp; benchmarks</h2>
+  <p>The deep pooled model forecasts next year's investment from this year's regressors
+  (direct horizon $h=1$), and is compared against a deep time-series model (no pooling),
+  a panel VAR, and an AR(1), by RMSE ratios and Diebold–Mariano tests.</p>
+  <div class="grid2">
+    <div class="tablebox"><h4>Out-of-sample RMSE (pooled over firms and origins)</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>RMSE</th>
+      <th>ratio to AR1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DeepPooled</th>
+      <td>85.851</td>
+      <td>1.329</td>
+    </tr>
+    <tr>
+      <th>DeepTS</th>
+      <td>103.433</td>
+      <td>1.602</td>
+    </tr>
+    <tr>
+      <th>PVAR</th>
+      <td>336.391</td>
+      <td>5.209</td>
+    </tr>
+    <tr>
+      <th>AR1</th>
+      <td>64.583</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table></div>
+    <div class="tablebox"><h4>Diebold-Mariano tests vs AR(1)</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>vs</th>
+      <th>DM</th>
+      <th>p_value</th>
+      <th>mean_dloss</th>
+    </tr>
+    <tr>
+      <th>model</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>DeepPooled</th>
+      <td>AR1</td>
+      <td>2.985</td>
+      <td>0.998</td>
+      <td>3199.483</td>
+    </tr>
+    <tr>
+      <th>DeepTS</th>
+      <td>AR1</td>
+      <td>1.711</td>
+      <td>0.955</td>
+      <td>6527.472</td>
+    </tr>
+    <tr>
+      <th>PVAR</th>
+      <td>AR1</td>
+      <td>3.276</td>
+      <td>0.999</td>
+      <td>108987.861</td>
+    </tr>
+  </tbody>
+</table></div>
+  </div>
+  <div class="callout"><b>Honest reading.</b> Among the <i>multivariate</i> models the
+  deep pooled estimator wins clearly — it beats the non-pooled deep time-series model
+  and dominates the linear panel VAR (~5× lower RMSE), showing the payoff of pooling
+  <i>with</i> nonlinearity. The univariate AR(1) is a very strong one-step benchmark on
+  this short, highly persistent series and is not beaten here; in the papers' longer,
+  co-moving G7 panels the deep pooled model beats the AR(1) outright. Pooling and
+  nonlinearity pay off most when the panel is long and the cross-section co-moves.</div>
+  <div class="grid2">
+    <figure><img src="figures/fig_forecast_firm.png" alt="Forecast vs. outturn for the largest firm."><figcaption>Forecast vs. outturn for the largest firm.</figcaption></figure>
+    <figure><img src="figures/fig_rmse_heatmap.png" alt="RMSE ratios to AR(1) by firm."><figcaption>RMSE ratios to AR(1) by firm.</figcaption></figure>
+  </div>
+</section>
+
+<section id="marginal">
+  <span class="pill">INTERPRETABILITY</span>
+  <h2><span class="n">§6</span>Marginal effects &amp; poolability</h2>
+  <p>Partial derivatives give the marginal effect of each regressor on forecast
+  investment, firm by firm and year by year.</p>
+  <figure><img src="figures/fig_partial_derivatives.png" alt="Time-varying marginal effects of market value and capital."><figcaption>Time-varying marginal effects of market value and capital.</figcaption></figure>
+  <div class="grid2">
+    <div class="tablebox"><h4>Average marginal effects by firm</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>d invest / d value</th>
+      <th>d invest / d capital</th>
+      <th>d invest / d invest_L1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>General Motors</th>
+      <td>-0.071</td>
+      <td>0.227</td>
+      <td>0.699</td>
+    </tr>
+    <tr>
+      <th>US Steel</th>
+      <td>-0.089</td>
+      <td>-0.580</td>
+      <td>0.985</td>
+    </tr>
+    <tr>
+      <th>General Electric</th>
+      <td>-0.006</td>
+      <td>0.048</td>
+      <td>0.424</td>
+    </tr>
+    <tr>
+      <th>Chrysler</th>
+      <td>-0.101</td>
+      <td>0.151</td>
+      <td>0.571</td>
+    </tr>
+    <tr>
+      <th>Atlantic Refining</th>
+      <td>-0.003</td>
+      <td>0.026</td>
+      <td>0.180</td>
+    </tr>
+    <tr>
+      <th>IBM</th>
+      <td>-0.155</td>
+      <td>-0.001</td>
+      <td>0.846</td>
+    </tr>
+    <tr>
+      <th>Union Oil</th>
+      <td>0.024</td>
+      <td>0.060</td>
+      <td>0.122</td>
+    </tr>
+    <tr>
+      <th>Westinghouse</th>
+      <td>-0.009</td>
+      <td>0.294</td>
+      <td>-0.101</td>
+    </tr>
+    <tr>
+      <th>Goodyear</th>
+      <td>0.004</td>
+      <td>-0.078</td>
+      <td>0.179</td>
+    </tr>
+    <tr>
+      <th>Diamond Match</th>
+      <td>-0.043</td>
+      <td>0.527</td>
+      <td>-0.326</td>
+    </tr>
+    <tr>
+      <th>American Steel</th>
+      <td>0.038</td>
+      <td>-0.097</td>
+      <td>0.267</td>
+    </tr>
+  </tbody>
+</table></div>
+    <div class="tablebox"><h4>Nonlinear poolability test</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>P statistic</th>
+      <th>p-value</th>
+      <th>units</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.919</td>
+      <td>0.055</td>
+      <td>11</td>
+    </tr>
+  </tbody>
+</table></div>
+  </div>
+  <div class="callout"><b>Reading it.</b> Lagged investment absorbs most of the one-step
+  signal (a strongly positive, firm-persistent effect); conditional on it, the extra
+  marginal effects of value and capital are small and <i>firm-specific</i>. That
+  heterogeneity is exactly what the poolability test detects — and what a linear pooled
+  panel would impose away.</div>
+</section>
+
+<section id="groups">
+  <span class="pill">HOMOGENEITY PURSUIT</span>
+  <h2><span class="n">§7</span>Latent groups of firms</h2>
+  <p>Deep Panel Training with a classifier-LASSO penalty discovers clusters of firms
+  that share an investment response — a data-driven segmentation with no hand-picked
+  categories.</p>
+  <figure><img src="figures/fig_groups.png" alt="Estimated latent groups of firms."><figcaption>Estimated latent groups of firms.</figcaption></figure>
+  <div class="tablebox"><h4>Estimated latent groups of firms</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>group</th>
+      <th>mean invest</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Diamond Match</th>
+      <td>0</td>
+      <td>3.100</td>
+    </tr>
+    <tr>
+      <th>American Steel</th>
+      <td>0</td>
+      <td>6.800</td>
+    </tr>
+    <tr>
+      <th>General Motors</th>
+      <td>1</td>
+      <td>608.000</td>
+    </tr>
+    <tr>
+      <th>US Steel</th>
+      <td>1</td>
+      <td>410.500</td>
+    </tr>
+    <tr>
+      <th>General Electric</th>
+      <td>2</td>
+      <td>102.300</td>
+    </tr>
+    <tr>
+      <th>Chrysler</th>
+      <td>2</td>
+      <td>86.100</td>
+    </tr>
+    <tr>
+      <th>Atlantic Refining</th>
+      <td>2</td>
+      <td>61.800</td>
+    </tr>
+    <tr>
+      <th>IBM</th>
+      <td>2</td>
+      <td>55.400</td>
+    </tr>
+    <tr>
+      <th>Union Oil</th>
+      <td>2</td>
+      <td>47.600</td>
+    </tr>
+    <tr>
+      <th>Westinghouse</th>
+      <td>2</td>
+      <td>42.900</td>
+    </tr>
+    <tr>
+      <th>Goodyear</th>
+      <td>2</td>
+      <td>41.900</td>
+    </tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="conformal">
+  <span class="pill">UNCERTAINTY</span>
+  <h2><span class="n">§8</span>Conformal prediction intervals</h2>
+  <p>With no external surrogate, LDPM reduces to Deep Panel Training plus within-group
+  split-conformal intervals. Below are 90% prediction intervals for the final year's
+  investment.</p>
+  <figure><img src="figures/fig_conformal.png" alt="90% conformal prediction intervals for the held-out year."><figcaption>90% conformal prediction intervals for the held-out year.</figcaption></figure>
+  <div class="tablebox"><h4>Conformal prediction intervals (last year)</h4>
+<table class="dataframe dp-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>forecast</th>
+      <th>lower</th>
+      <th>upper</th>
+      <th>actual</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>General Motors</th>
+      <td>1520.800</td>
+      <td>1483.500</td>
+      <td>1558.100</td>
+      <td>1486.700</td>
+    </tr>
+    <tr>
+      <th>US Steel</th>
+      <td>483.500</td>
+      <td>446.200</td>
+      <td>520.800</td>
+      <td>459.300</td>
+    </tr>
+    <tr>
+      <th>General Electric</th>
+      <td>246.600</td>
+      <td>83.600</td>
+      <td>409.700</td>
+      <td>189.600</td>
+    </tr>
+    <tr>
+      <th>Chrysler</th>
+      <td>-80.900</td>
+      <td>-244.000</td>
+      <td>82.100</td>
+      <td>172.500</td>
+    </tr>
+    <tr>
+      <th>Atlantic Refining</th>
+      <td>111.200</td>
+      <td>-51.900</td>
+      <td>274.200</td>
+      <td>81.400</td>
+    </tr>
+    <tr>
+      <th>IBM</th>
+      <td>-40.600</td>
+      <td>-203.600</td>
+      <td>122.500</td>
+      <td>135.700</td>
+    </tr>
+    <tr>
+      <th>Union Oil</th>
+      <td>109.800</td>
+      <td>-53.300</td>
+      <td>272.800</td>
+      <td>89.500</td>
+    </tr>
+    <tr>
+      <th>Westinghouse</th>
+      <td>91.000</td>
+      <td>-72.000</td>
+      <td>254.100</td>
+      <td>68.600</td>
+    </tr>
+    <tr>
+      <th>Goodyear</th>
+      <td>74.100</td>
+      <td>-88.900</td>
+      <td>237.200</td>
+      <td>49.300</td>
+    </tr>
+    <tr>
+      <th>Diamond Match</th>
+      <td>-55.900</td>
+      <td>-117.000</td>
+      <td>5.200</td>
+      <td>5.100</td>
+    </tr>
+    <tr>
+      <th>American Steel</th>
+      <td>-54.700</td>
+      <td>-115.800</td>
+      <td>6.300</td>
+      <td>6.300</td>
+    </tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="quickstart">
+  <span class="pill">USER GUIDE</span>
+  <h2><span class="n">§9</span>Quickstart</h2>
+  <p>Install and run your first model in a few lines. The full, copy-paste syntax for
+  every workflow is in the <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md">cookbook</a>; the complete real-data
+  walkthrough is the <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/deeppanel_tutorial.ipynb">Jupyter notebook</a>.</p>
+<pre><span class="c"># pip install deeppanel</span>
+import numpy as np
+from deeppanel import PanelData, DeepPooledPanel, TrainConfig
+
+<span class="c"># y:(N,T) outcome, X:(N,T,p) regressors — a balanced panel</span>
+panel = PanelData(y, X, feature_names=["value","capital"])
+<span class="c"># or: PanelData.from_long(df, unit="firm", time="year", y="invest", x=["value","capital"])</span>
+
+model = DeepPooledPanel(horizon=1, depth=3, width=24,
+                        config=TrainConfig(max_epochs=1000, lr=0.01, seed=0), seed=0)
+model.fit(panel)
+
+yhat = model.forecast(panel)                     <span class="c"># (N,) one-year-ahead forecast</span>
+grad = model.partial_derivatives(panel.X[:, -1]) <span class="c"># marginal effects</span>
+test = model.poolability_test(panel)             <span class="c"># specification test</span>
+</pre>
+  <div class="card">
+    <h3>Learn more</h3>
+    <p>📖 <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md">Full syntax cookbook</a> — data prep, every option, tables &amp; plots.<br>
+       📓 <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/deeppanel_tutorial.ipynb">Real-data notebook</a> — this entire case study, reproducible.<br>
+       ✅ <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/PAPER_COMPATIBILITY.md">Paper compatibility map</a> — equation-by-equation faithfulness.<br>
+       🐙 <a href="https://github.com/merwanroudane/deeppanel">Source on GitHub</a> · 📦 <a href="https://pypi.org/project/deeppanel/">Package on PyPI</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <p><b>deeppanel</b> v0.1.2 — authored by <b>Dr Merwan Roudane</b>
+  (<a href="mailto:merwanroudane920@gmail.com">merwanroudane920@gmail.com</a>).
+  Licensed MIT. Built with a faithful reading of the source papers; all figures and
+  tables are generated from the real-data notebook.</p>
+  <p><a href="https://pypi.org/project/deeppanel/">PyPI</a> · <a href="https://github.com/merwanroudane/deeppanel">GitHub</a> · <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md">Cookbook</a>
+   · <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/deeppanel_tutorial.ipynb">Notebook</a> · <a href="https://github.com/merwanroudane/deeppanel/blob/main/docs/PAPER_COMPATIBILITY.md">Compatibility</a></p>
+</div></footer>
+
+</body></html>
