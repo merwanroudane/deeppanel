@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/deeppanel.svg)](https://pypi.org/project/deeppanel/)
 [![Python versions](https://img.shields.io/pypi/pyversions/deeppanel.svg)](https://pypi.org/project/deeppanel/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/merwanroudane/deeppanel/blob/main/LICENSE)
 
 **Deep neural network estimation, forecasting and inference in panel data models.**
 
@@ -18,7 +18,7 @@ learning for panel data:
 
 Every estimator is checked equation-by-equation against its source and validated
 on the papers' own known-truth simulation designs — see
-[`docs/PAPER_COMPATIBILITY.md`](docs/PAPER_COMPATIBILITY.md).
+[`docs/PAPER_COMPATIBILITY.md`](https://github.com/merwanroudane/deeppanel/blob/main/docs/PAPER_COMPATIBILITY.md).
 
 Author: **Dr Merwan Roudane**. Licensed MIT.
 
@@ -39,7 +39,7 @@ Optional extras (`statsmodels`, `scikit-learn`) install with `pip install deeppa
 
 ## Quickstart
 
-> **📖 Full syntax cookbook:** [`docs/USAGE.md`](docs/USAGE.md) — copy-paste-ready
+> **📖 Full syntax cookbook:** [`docs/USAGE.md`](https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md) — copy-paste-ready
 > scripts for every workflow (data prep, every option, benchmarks, tables, plots,
 > LDPM). The blocks below are the short version.
 
@@ -166,7 +166,7 @@ colour maps (`parula_colors`, …) with Parula as the default.
 ## Syntax reference
 
 > Every argument of every function, with runnable examples, is in the
-> **[usage cookbook → `docs/USAGE.md`](docs/USAGE.md)**. Quick method summary below.
+> **[usage cookbook → `docs/USAGE.md`](https://github.com/merwanroudane/deeppanel/blob/main/docs/USAGE.md)**. Quick method summary below.
 
 ### `DeepPooledPanel(horizon=1, depth=3, width=20, idiosyncratic=False, demean=True, feature_scale="standardize", target_scale="none", cv=None, val_frac=0.2, config=None, first_layer_bias=False, batchnorm=False, dropout=0.0, seed=None)`
 
@@ -194,7 +194,7 @@ See full docstrings (`help(DeepPooledPanel)`, `help(LDPM)`) for every argument.
 
 ## Examples
 
-Runnable scripts in [`examples/`](examples/) (each writes figures to `examples/_output/`):
+Runnable scripts in [`examples/`](https://github.com/merwanroudane/deeppanel/tree/main/examples) (each writes figures to `examples/_output/`):
 
 ```bash
 python examples/01_deep_pooled_forecasting.py       # RMSE table + DM vs benchmarks
@@ -226,7 +226,7 @@ time-series ≻ linear), correct poolability-test size and power, exact partial
 derivatives, C-LASSO group recovery ≈ 0.94, split-conformal coverage ≈ nominal,
 and the Table-8 result that LDPM's surrogate gain grows with the target/surrogate
 error correlation. Details and the equation-by-equation map are in
-[`docs/PAPER_COMPATIBILITY.md`](docs/PAPER_COMPATIBILITY.md).
+[`docs/PAPER_COMPATIBILITY.md`](https://github.com/merwanroudane/deeppanel/blob/main/docs/PAPER_COMPATIBILITY.md).
 
 The **LLM/BERT text pipeline** of Paper 1 (GPT annotation, fine-tuned BERTs, LDA
 / OpenAI embeddings) is intentionally out of scope — it is inherently external.
@@ -244,7 +244,7 @@ pytest -q
 ## Citation
 
 If you use this package, please cite the package and the underlying papers (see
-[`CITATION.cff`](CITATION.cff)).
+[`CITATION.cff`](https://github.com/merwanroudane/deeppanel/blob/main/CITATION.cff)).
 
 ## License
 
