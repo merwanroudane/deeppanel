@@ -6,7 +6,7 @@
 
 **Deep neural network estimation, forecasting and inference in panel data models.**
 
-📦 **PyPI:** https://pypi.org/project/deeppanel/ — `pip install deeppanel`
+📦 **PyPI** — **v0.1.2** · https://pypi.org/project/deeppanel/ · `pip install deeppanel`
 
 `deeppanel` is a faithful Python implementation of three recent papers on deep
 learning for panel data:
