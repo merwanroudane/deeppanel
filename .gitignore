@@ -1,0 +1,32 @@
+# Papers (kept locally, not distributed)
+_papers/
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Generated figures / outputs from examples
+examples/_output/
+*.tmp
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

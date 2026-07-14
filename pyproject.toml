@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deeppanel"
+version = "0.1.0"
+description = "Deep neural network estimation, forecasting and inference in panel data models (deep pooled panels + LLM-powered deep panel modeling)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Merwan Roudane", email = "merwanroudane920@gmail.com" },
+]
+maintainers = [
+  { name = "Merwan Roudane", email = "merwanroudane920@gmail.com" },
+]
+keywords = [
+  "panel data", "neural networks", "deep learning", "forecasting",
+  "nonlinear panel", "conformal prediction", "homogeneity pursuit",
+  "classifier lasso", "partial derivatives", "econometrics",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "numpy>=1.21",
+  "pandas>=1.3",
+  "scipy>=1.7",
+  "torch>=1.12",
+  "matplotlib>=3.4",
+]
+
+[project.optional-dependencies]
+extras = ["statsmodels>=0.13", "scikit-learn>=1.0"]
+dev = ["pytest>=7.0", "statsmodels>=0.13", "scikit-learn>=1.0"]
+
+[project.urls]
+Homepage = "https://github.com/merwanroudane/deeppanel"
+Repository = "https://github.com/merwanroudane/deeppanel"
+Issues = "https://github.com/merwanroudane/deeppanel/issues"
+
+[tool.setuptools.packages.find]
+include = ["deeppanel*"]
+
+[tool.setuptools.package-data]
+deeppanel = ["py.typed"]

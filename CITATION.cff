@@ -1,0 +1,67 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "deeppanel: Deep neural network estimation, forecasting and inference in panel data models"
+version: 0.1.0
+date-released: 2026-07-14
+authors:
+  - family-names: Roudane
+    given-names: Merwan
+    email: merwanroudane920@gmail.com
+repository-code: "https://github.com/merwanroudane/deeppanel"
+license: MIT
+keywords:
+  - panel data
+  - neural networks
+  - forecasting
+  - conformal prediction
+  - classifier lasso
+references:
+  - type: article
+    title: "Forecasting with Deep Pooled Panel Neural Networks"
+    authors:
+      - family-names: Chronopoulos
+        given-names: Ilias
+      - family-names: Chrysikou
+        given-names: Katerina
+      - family-names: Kapetanios
+        given-names: George
+      - family-names: Mitchell
+        given-names: James
+      - family-names: Raftapostolos
+        given-names: Aristeidis
+    journal: "Econometric Reviews"
+    year: 2026
+    doi: "10.1080/07474938.2026.2660660"
+  - type: report
+    title: "Deep Neural Network Estimation in Panel Data Models"
+    authors:
+      - family-names: Chronopoulos
+        given-names: Ilias
+      - family-names: Chrysikou
+        given-names: Katerina
+      - family-names: Kapetanios
+        given-names: George
+      - family-names: Mitchell
+        given-names: James
+      - family-names: Raftapostolos
+        given-names: Aristeidis
+    institution:
+      name: "Federal Reserve Bank of Cleveland"
+    number: "Working Paper 23-15"
+    year: 2023
+    doi: "10.26509/frbc-wp-202315"
+  - type: article
+    title: "How Does LLM Help Regional CPI Forecast: An LLM-powered Deep Panel Modeling Framework"
+    authors:
+      - family-names: Gao
+        given-names: Tianchen
+      - family-names: Sun
+        given-names: Ao
+      - family-names: Wang
+        given-names: Yurou
+      - family-names: Liu
+        given-names: Jingyuan
+      - family-names: Hsiao
+        given-names: Cheng
+    year: 2026
+    notes: "arXiv:2604.06894"
